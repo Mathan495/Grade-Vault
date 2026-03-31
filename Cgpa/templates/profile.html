@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}My Profile — GradeVault{% endblock %}
+
+{% block extra_head %}
+<style>
+form input{
+  padding: 3px;
+  border-radius: 5px;
+  font-size: 13px;
+  margin-left: 15px;
+  background: rgba(100, 101, 134, 0.3);
+  outline: none;
+  border: none;
+  color: white;
+  padding-left: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-tight">
+  <div class="page-header anim-fade-up">
+    <h1>My Profile</h1>
+    <p>Update your personal and academic details</p>
+  </div>
+
+  <div class="row g-4">
+    <!-- Avatar + Quick Stats -->
+    <div class="col-lg-4 anim-fade-up anim-delay-1">
+      <div class="gv-card text-center">
+        <div class="nav-avatar mx-auto mb-3"
+             style="width:80px;height:80px;border-radius:20px;font-size:2rem;
+                    background:{{ profile.avatar_color|default:'#4f46e5' }};">
+          {{ request.user.first_name|default:request.user.username|first|upper }}
+        </div>
+        <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:4px;">
+          {{ request.user.first_name|default:request.user.username }}
+        </h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0;">
+          @{{ request.user.username }}
+        </p>
+        <div style="flex-direction: column;" class="d-flex justify-content-center">
+          <div>
+            <div style="font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--accent-light);">
+              {{ profile.year }}
+            </div>
+             </div>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--green);">
+              {{ request.user.email }}
+            </div>
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Email</div>
+          </div>
+        </div>
+        <br>
+        <p style="font-size:0.85rem; color:var(--text-secondary);">
+          <i class="bi bi-building me-1"></i> {{ profile.college }}
+        </p>
+        
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0;">
+          <i class="bi bi-mortarboard me-1"></i> {{ profile.department }}
+        </p>
+        
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="col-lg-8 anim-fade-up anim-delay-2">
+      <div class="gv-card">
+        <h4 style="font-size:1rem;font-weight:700;margin-bottom:1.5rem;">
+          <i class="bi bi-pencil-square me-2" style="color:var(--accent-light);"></i>
+          Edit Profile
+        </h4>
+
+        <form method="post" class="editprofile">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label">First Name</label>
+              <input type="text" name="first_name" placeholder="First Name"/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Last Name</label>
+              <input type="text" name="last_name"  placeholder="Last Name"/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Email Address</label>
+              <input type="email" name="email" placeholder="Email"/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">College / University</label>
+              <input type="text" name="college" placeholder="College"/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Department</label>
+             <input type="text" name="department" placeholder="Department"/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">Enrollment Year</label>
+              <input type="text" name="year" placeholder="Year"/>
+            </div>
+            <br>
+            <br>
+            <br>
+            <div class="col-12 mt-2">
+              <button type="submit" class="btn-gv btn-gv-primary" style="text-decoration:none;">
+                <i class="bi bi-check-circle-fill"></i> Save Changes
+              </button>
+              <a href="#" class="btn-gv btn-gv-ghost ms-2" style="text-decoration:none;">
+                Cancel
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

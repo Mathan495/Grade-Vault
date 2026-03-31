@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+
+{% block title %}GradeVault — Track Your Academic Journey{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Hero section */
+  .hero {
+    min-height: calc(100vh - 68px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated gradient background blobs */
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(99,102,241,0.12), transparent 70%);
+    top: -100px; left: -100px;
+    border-radius: 50%;
+    animation: blobDrift1 12s ease-in-out infinite alternate;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(167,139,250,0.08), transparent 70%);
+    bottom: -50px; right: -50px;
+    border-radius: 50%;
+    animation: blobDrift2 15s ease-in-out infinite alternate;
+  }
+  @keyframes blobDrift1 {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(60px, 40px) scale(1.15); }
+  }
+  @keyframes blobDrift2 {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(-40px, -60px) scale(1.1); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(99,102,241,0.12);
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #a5b4fc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+
+  .hero-title .highlight {
+    background: linear-gradient(135deg, #6366f1, #a78bfa, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+
+  .hero-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+
+  .btn-hero-primary {
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 32px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.25s;
+    box-shadow: 0 6px 30px rgba(99,102,241,0.35);
+  }
+  .btn-hero-primary:hover {
+    background: var(--accent-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(99,102,241,0.5);
+    color: #fff;
+  }
+
+  .btn-hero-ghost {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 14px 32px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.25s;
+  }
+  .btn-hero-ghost:hover {
+    color: var(--text-primary);
+    border-color: var(--border-active);
+    transform: translateY(-2px);
+  }
+
+  /* Stats strip */
+  .stats-strip {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s ease 0.5s both;
+  }
+  .strip-stat .num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent-light);
+  }
+  .strip-stat .lbl {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Features section */
+  .features-section {
+    padding: 5rem 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .section-title h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  .section-title p {
+    margin-top: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent-glow), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-card:hover {
+    border-color: var(--border-active);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md), var(--shadow-accent);
+  }
+  .feature-icon {
+    width: 52px; height: 52px;
+    background: rgba(99,102,241,0.15);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(99,102,241,0.2);
+  }
+  .feature-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .feature-card p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* Grade scale section */
+  .grade-scale {
+    padding: 4rem 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .grade-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+  }
+  .grade-row:hover { border-color: var(--border-active); }
+
+  @media (max-width: 576px) {
+    .stats-strip { gap: 1rem; flex-wrap: wrap; }
+    .hero-title { letter-spacing: -1px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ─── HERO ───────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i class="bi bi-stars"></i>
+      Built for College Students 
+    </div>
+
+    <h1 class="hero-title">
+      Track Your<br>
+      <span class="highlight">Academic Progress</span><br>
+      Effortlessly
+    </h1>
+
+    <p class="hero-subtitle">
+      GradeVault calculates your GPA and CGPA using the 10-point grade scale.
+      Add semesters, enter grades, and visualize your academic journey — all in one place.
+    </p>
+
+    {% if request.user.is_authenticated %}
+    <div class="hero-cta">
+      <a href="{% url 'add_semester' %}" class="btn-hero-primary">
+        <i class="bi bi-rocket-takeoff-fill"></i>
+        Calculate GPA
+      </a>
+    </div>
+    {% else %}
+    <div class="hero-cta">
+      <a href="{% url 'register_page' %}" class="btn-hero-primary">
+        <i class="bi bi-rocket-takeoff-fill"></i>
+        Get Started Free
+      </a>
+      <a href="{% url 'login_page' %}" class="btn-hero-ghost">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Sign In
+      </a>
+    </div>
+    {% endif %}
+    <div class="stats-strip">
+      <div class="strip-stat text-center">
+        <div class="num">10pt</div>
+        <div class="lbl">Grade Scale</div>
+      </div>
+      <div class="strip-stat text-center">
+        <div class="num">∞</div>
+        <div class="lbl">Semesters</div>
+      </div>
+      <div class="strip-stat text-center">
+        <div class="num">Free</div>
+        <div class="lbl">Always</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURES ───────────────────────────────── -->
+<section class="features-section">
+  <div class="container-tight">
+    <div class="section-title">
+      <h2>Everything you need to track your GPA</h2>
+      <p>Simple tools built for students, not spreadsheets.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4 anim-fade-up">
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Automatic CGPA Calculation</h3>
+          <p>Enter your grades and credits — we instantly calculate GPA per semester and your cumulative CGPA using the weighted formula.</p>
+        </div>
+      </div>
+      <div class="col-md-4 anim-fade-up anim-delay-1">
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Visual Progress Grade</h3>
+          <p>See your GPA trend across semesters wise. Identify where you improved or need to focus.</p>
+        </div>
+      </div>
+      <div class="col-md-4 anim-fade-up anim-delay-2">
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Your Data, Private</h3>
+          <p>Secure login with Django authentication. Each student sees only their own data — no sharing, no leaks.</p>
+        </div>
+      </div>
+      <div class="col-md-4 anim-fade-up anim-delay-2">
+        <div class="feature-card">
+          <div class="feature-icon">✏️</div>
+          <h3>Edit Anytime</h3>
+          <p>Made a mistake? Update any semester or subject at any time. CGPA is recalculated automatically after every change.</p>
+        </div>
+      </div>
+      <div class="col-md-4 anim-fade-up anim-delay-3">
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Mobile Friendly</h3>
+          <p>Fully responsive design built with Bootstrap 5. Use it on your phone between classes or on your laptop at night.</p>
+        </div>
+      </div>
+      <div class="col-md-4 anim-fade-up anim-delay-4">
+        <div class="feature-card">
+          <div class="feature-icon">🎓</div>
+          <h3>10-Point Grade Scale</h3>
+          <p>Supports O, A+, A, B+, B, C, P, F grades — the standard system used across Anna University, VTU, Mumbai University, and more.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GRADE SCALE ────────────────────────────── -->
+<section class="grade-scale">
+  <div class="container-tight">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5">
+        <h2 style="font-size:1.8rem; font-weight:800; letter-spacing:-0.5px; margin-bottom:1rem;">
+          Standard 10-Point<br>Grade Scale
+        </h2>
+        <p style="color: var(--text-secondary); font-size:0.95rem;">
+          GradeVault uses the same grade point mapping followed by most autonomous colleges
+          affiliated with Anna University, VTU, JNTU, and other Indian universities.
+        </p>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'add_semester' %}" class="btn-gv btn-gv-primary mt-3" style="text-decoration:none;">
+          <i class="bi bi-rocket-takeoff-fill"></i> Calculate CGPA 
+        </a>
+        {% else %}
+        <a href="{% url 'register_page' %}" class="btn-gv btn-gv-primary mt-3" style="text-decoration:none;">
+          <i class="bi bi-person-plus-fill"></i> Create Your Account
+        </a>
+        {% endif %}
+      </div>
+      <div class="col-lg-7">
+        {% for grade, points, desc in grade_table %}
+        <div class="grade-row">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <span class="grade-badge grade-{{ grade|cut:'+' }}" style="min-width:40px;">{{ grade }}</span>
+            <span style="font-size:0.9rem; color: var(--text-secondary);">{{ desc }}</span>
+          </div>
+          <span style="font-family: var(--font-display); font-weight:700; color: var(--accent-light);">{{ points }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
